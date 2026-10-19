@@ -9,7 +9,7 @@ All paths are imported absolutely from a video folder, e.g. `import { mat } from
 - `makeTimeline(scenes)` used by `src/app.js`; you do not call it directly.
 
 ## src/app.js
-`runVideo({ narration, audio, scenes, fov?, exposure? })`. `scenes` is an ordered list of
+`runVideo({ narration, audio, scenes, fov?, exposure?, design? })`. `design` is an older narration object (save it as `narration-design.js`) whose cue times the scenes were authored against; the runtime then warps real time onto it line by line, so switching voices never requires editing scene code. `scenes` is an ordered list of
 `{ name, start, end?, scene, bg }`. `scene` is the object a `build*()` returns. Two entries may
 share the same scene object (return to a location later). `end` may be omitted on the last entry.
 Exposes `window.__anim` (seek, capture, validate) and `window.__dbg` (scene, camera, renderer, timeline).

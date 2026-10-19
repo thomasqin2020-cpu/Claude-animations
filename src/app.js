@@ -11,6 +11,10 @@ import { validateScene } from './validate.js';
  * @param {{duration:number,cues:{start:number,end:number,text:string}[]}} cfg.narration
  * @param {string} cfg.audio  URL of the narration file for the preview player
  * @param {number} [cfg.fov]  vertical field of view in degrees (default 40)
+ * @param {object} [cfg.design] a narration object whose cue times the scenes were authored
+ *   against. When given, real time is warped piecewise-linearly onto the design timeline
+ *   (line starts and ends are the anchors), so a re-synthesized voice with different pacing
+ *   keeps every beat inside the right sentence without touching scene code.
  */
 export function runVideo(cfg) {
   const glCanvas = document.getElementById('gl');
@@ -28,7 +32,9 @@ export function runVideo(cfg) {
   const camera = new THREE.PerspectiveCamera(cfg.fov ?? 40, WIDTH / HEIGHT, 0.05, 300);
   for (const s of cfg.scenes) scene.add(s.scene.group);
   const END = Math.ceil(cfg.narration.duration * FPS) / FPS;
-  const timeline = makeTimeline(cfg.scenes.map((s) => ({ ...s, end: s.end ?? END })));
+  const designEnd = cfg.design ? cfg.design.duration : END;
+  const timeline = makeTimeline(cfg.scenes.map((s) => ({ ...s, end: s.end ?? designEnd })));
+  const warp = makeWarp(cfg.narration, cfg.design);
 
   function fitStage() {
     const k = Math.min(window.innerWidth / WIDTH, window.innerHeight / HEIGHT);
@@ -40,7 +46,7 @@ export function runVideo(cfg) {
 
   const bg = new THREE.Color();
   function renderFrame(frame) {
-    const t = frame / FPS;
+    const t = warp(frame / FPS);
     const active = timeline.sceneAt(t);
     // Several timeline entries may share one group (e.g. return to a location), so hide all, then show the active one.
     for (const s of timeline.scenes) s.scene.group.visible = false;
@@ -54,7 +60,7 @@ export function runVideo(cfg) {
   }
 
   window.__anim = {
-    fps: FPS, width: WIDTH, height: HEIGHT, frames: Math.round(END * FPS), duration: END,
+    fps: FPS, width: WIDTH, height: HEIGHT, frames: Math.round(END * FPS), duration: END, warp,
     seek: (f) => { renderFrame(f); return true; },
     validate: () => { const r = validateScene(scene); r.triangles = renderer.info.render.triangles; return r; },
     capture: () => {
@@ -69,11 +75,26 @@ export function runVideo(cfg) {
   const params = new URLSearchParams(location.search);
   if (params.get('preview')) {
     const audio = new Audio(cfg.audio); audio.loop = true;
-    const start = () => { audio.play(); const t0 = performance.now(); const loop = () => { renderFrame(Math.floor(((performance.now() - t0) / 1000) * FPS) % timeline.frames); requestAnimationFrame(loop); }; loop(); };
+    const frames = Math.round(END * FPS);
+    const start = () => { audio.play(); const t0 = performance.now(); const loop = () => { renderFrame(Math.floor(((performance.now() - t0) / 1000) * FPS) % frames); requestAnimationFrame(loop); }; loop(); };
     document.body.addEventListener('click', start, { once: true });
     renderFrame(0);
   } else {
     renderFrame(Number(params.get('frame') || 0));
   }
   window.__animReady = true;
+}
+
+// Piecewise-linear map from real narration time to the design timeline. Anchors: 0, every
+// cue start and end, and the end of the audio. Identity when no design timeline is given.
+function makeWarp(real, design) {
+  if (!design) return (t) => t;
+  const xs = [0], ys = [0];
+  real.cues.forEach((c, i) => { const d = design.cues[i] || c; xs.push(c.start, c.end); ys.push(d.start, d.end); });
+  xs.push(real.duration); ys.push(design.duration);
+  return (t) => {
+    if (t <= 0) return 0;
+    for (let i = 1; i < xs.length; i++) if (t <= xs[i]) { const u = (t - xs[i - 1]) / Math.max(1e-6, xs[i] - xs[i - 1]); return ys[i - 1] + u * (ys[i] - ys[i - 1]); }
+    return ys[ys.length - 1] + (t - xs[xs.length - 1]);
+  };
 }
