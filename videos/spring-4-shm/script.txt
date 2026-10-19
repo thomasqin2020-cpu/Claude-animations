@@ -1,0 +1,8 @@
+Attach a mass, and Newton's second law says m times the second derivative of x equals negative k x.
+Acceleration is proportional to displacement, and opposite it.
+The solution is x equals A cosine of omega t, plus a phase constant.
+Plug it in, and omega squared must equal k over m.
+So the period is two pi times the square root of m over k.
+Notice what is missing: the amplitude.
+Hang the spring vertically, and gravity only shifts the equilibrium down by m g over k.
+The period stays exactly the same.

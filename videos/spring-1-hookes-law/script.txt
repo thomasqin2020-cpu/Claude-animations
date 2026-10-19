@@ -1,0 +1,8 @@
+Pull a spring a distance x, and it pulls back with a force F equals negative k x.
+The minus sign means the force always points back toward equilibrium.
+k is the stiffness, measured in newtons per meter.
+But why is the force linear?
+Near any stable equilibrium, expand the potential energy as a Taylor series.
+The slope is zero there, so the first term that matters is one half k x squared.
+Take negative d U d x, and Hooke's law falls right out.
+That is also why it only holds for small stretches, below the elastic limit.

@@ -1,0 +1,7 @@
+How much work does it take to stretch a spring?
+The force is not constant, so you cannot just multiply force by distance.
+Instead, integrate k x d x from zero to x.
+You get one half k x squared, the triangle under the force graph.
+That work is stored as elastic potential energy.
+Going from x one to x two, the spring itself does work one half k x one squared, minus one half k x two squared.
+Double the stretch, and you store four times the energy.

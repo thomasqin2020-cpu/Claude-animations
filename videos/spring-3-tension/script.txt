@@ -1,0 +1,9 @@
+In an ideal massless spring, tension is equal everywhere.
+A net force on a massless piece would mean infinite acceleration.
+So a spring pulls equally hard on both ends.
+Hang two springs in series, and each carries the full load, so the stretches add.
+That gives one over k effective equals one over k one plus one over k two.
+Side by side in parallel, they share one stretch, and their forces add.
+Now k effective is just k one plus k two.
+Series is softer than either spring.
+Parallel is stiffer than both.

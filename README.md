@@ -56,3 +56,8 @@ lives in `src/`; per-video code lives in `videos/<slug>/`.
 ## Videos
 
 - `videos/moon-dust/`: Apollo suit abrasion (idea 40). Render in `renders/moon-dust/`.
+- `videos/spring-1-hookes-law/`, `spring-2-energy/`, `spring-3-tension/`, `spring-4-shm/`: four-part AP Physics C spring-force series. Renders in `renders/<slug>/`.
+
+Shared physics props added for the series: `src/props/spring.js` (closed-form helix with `setLength`),
+`arrow.js`, `label.js`, `graphPanel.js` (curves, Riemann strips, filled areas), `lab.js` (dark lab,
+bench, anchor, block, lights), `ruler.js`, `chartRecorder.js`.
