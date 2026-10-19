@@ -38,9 +38,21 @@ The 9:16 frame with a 40 degree vertical FOV has a horizontal FOV of only about 
 Shots must be framed for that: keep subjects within roughly plus or minus 11 degrees of the
 camera's forward axis, and stack foreground, midground, and background vertically.
 
-## Current video: Moon Dust (idea 40)
+## Making a new video
 
-- Script: `script/narration.txt`. Voice: `python3 scripts/tts.py am_michael 1.1` writes `audio/narration.wav` and `src/narration.js`.
-- Shot plan and fact basis: `docs/moon-dust-shot-plan.md`.
-- Render: `npm run render` (about 10 minutes on CPU) writes `out/final-animation.mp4` with the narration muxed in.
-- QA: `npm run contact-sheet -- --cuts=9,13.51,15.01,22.2,23.86,25.65,26.85,28.19,32.48`.
+The skill at `.claude/skills/explainer-short/SKILL.md` drives this. In short:
+
+```
+cp -r videos/_template videos/<slug>          # edit main.js, script.txt, scenes/
+python3 scripts/tts.py --video <slug>          # narration + cue times
+node scripts/dev/frame.mjs 0 90 180            # spot frames to out/dev/
+node scripts/render.js --video <slug>          # out/<slug>/final-animation.mp4
+node scripts/contact-sheet.js --video <slug> --cuts=9,13.5
+```
+
+`videos/current.txt` names the default video for every script. Reusable library code
+lives in `src/`; per-video code lives in `videos/<slug>/`.
+
+## Videos
+
+- `videos/moon-dust/`: Apollo suit abrasion (idea 40). Render in `renders/moon-dust/`.

@@ -5,7 +5,8 @@ const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromi
 const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
 page.on('console', m => console.log('console:', m.text()));
 page.on('pageerror', e => console.log('ERR', e.message));
-await page.goto(`http://localhost:${server.address().port}/`);
+const video = process.env.VIDEO || (await import('node:fs')).readFileSync('videos/current.txt', 'utf8').trim();
+await page.goto(`http://localhost:${server.address().port}/?video=${video}`);
 await page.waitForFunction(() => window.__animReady === true);
 console.log(await page.evaluate(() => {
   __anim.seek(59);

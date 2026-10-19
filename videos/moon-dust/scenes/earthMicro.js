@@ -1,9 +1,9 @@
 // Scene B (9.0 - 13.51 s): microscopic beach. Wind streaks and a water wash tumble rounded grains.
 import * as THREE from 'three';
-import { mat } from '../materials.js';
-import { roundGrainGeometry, GRAIN } from '../props/grains.js';
-import { rng, span, easeInOut } from '../timeline.js';
-import { dolly } from '../camera.js';
+import { mat } from '/src/materials.js';
+import { roundGrainGeometry, GRAIN } from '/src/props/grains.js';
+import { rng, span, easeInOut } from '/src/timeline.js';
+import { dolly } from '/src/camera.js';
 
 export function buildEarthMicro() {
   const g = new THREE.Group(); g.name = 'scene_earthMicro';

@@ -1,10 +1,10 @@
 // Scene C (13.51 - 23.86 s): the same micro framing on the Moon. Nothing moves, then
 // meteorite impacts shatter rock into shards and glass beads, then a boot kicks them up.
 import * as THREE from 'three';
-import { box, mat } from '../materials.js';
-import { shardGeometry, GRAIN, createDustSystem } from '../props/grains.js';
-import { rng, span, easeInOut, easeOut, easeIn, lerp } from '../timeline.js';
-import { dolly, orbit } from '../camera.js';
+import { box, mat } from '/src/materials.js';
+import { shardGeometry, GRAIN, createDustSystem } from '/src/props/grains.js';
+import { rng, span, easeInOut, easeOut, easeIn, lerp } from '/src/timeline.js';
+import { dolly, orbit } from '/src/camera.js';
 
 const G = 1.62;
 export function buildMoonMicro() {

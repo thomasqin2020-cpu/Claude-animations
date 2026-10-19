@@ -7,23 +7,26 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createServer } from './serve.js';
+import { argValue } from './args.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const OUT = path.join(ROOT, 'out');
+let OUT;
 const args = process.argv.slice(2);
 const keepFrames = args.includes('--frames');
-const startArg = Number((args.find((a) => a.startsWith('--start=')) || '--start=0').split('=')[1]);
-const endArg = args.find((a) => a.startsWith('--end='));
-const outName = (args.find((a) => a.startsWith('--out=')) || '--out=final-animation.mp4').split('=')[1];
-const audio = (args.find((a) => a.startsWith('--audio=')) || '--audio=').split('=')[1] || findAudio();
+const startArg = Number(argValue(args, 'start') || 0);
+const endArg = argValue(args, 'end');
+const video = argValue(args, 'video') || fs.readFileSync(path.join(ROOT, 'videos/current.txt'), 'utf8').trim();
+const outName = argValue(args, 'out') || 'final-animation.mp4';
+const audio = argValue(args, 'audio') || findAudio();
 
 function findAudio() {
-  const dir = path.join(ROOT, 'audio');
+  const dir = path.join(ROOT, 'videos', video, 'audio');
   if (!fs.existsSync(dir)) return '';
   const f = fs.readdirSync(dir).find((n) => /\.(mp3|wav|m4a|aac|ogg)$/i.test(n));
   return f ? path.join(dir, f) : '';
 }
 
+OUT = path.join(ROOT, 'out', video);
 fs.mkdirSync(OUT, { recursive: true });
 if (keepFrames) fs.mkdirSync(path.join(OUT, 'frames'), { recursive: true });
 
@@ -39,10 +42,10 @@ const browser = await chromium.launch({
 const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
 page.on('pageerror', (e) => { console.error('PAGE ERROR', e); process.exitCode = 1; });
 page.on('console', (m) => { if (m.type() === 'error') console.error('console:', m.text()); });
-await page.goto(`http://localhost:${port}/`);
+await page.goto(`http://localhost:${port}/?video=${video}`);
 await page.waitForFunction(() => window.__animReady === true, null, { timeout: 60000 });
 const info = await page.evaluate(() => ({ fps: __anim.fps, frames: __anim.frames, duration: __anim.duration }));
-const endFrame = endArg ? Number(endArg.split('=')[1]) : info.frames;
+const endFrame = endArg ? Number(endArg) : info.frames;
 console.log(`timeline: ${info.duration}s, ${info.frames} frames @ ${info.fps}fps; rendering ${startArg}..${endFrame - 1}`);
 
 const validation = await page.evaluate(() => { __anim.seek(0); return __anim.validate(); });

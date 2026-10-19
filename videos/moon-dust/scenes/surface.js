@@ -1,13 +1,13 @@
 // Scene A (0 - 9.0 s): astronaut walking on the Moon, wear revealed, dust kicked up.
 // Scene E (28.19 - end): brushing the suit, fine dust stays, pressure payoff.
 import * as THREE from 'three';
-import { box, mat } from '../materials.js';
-import { createAstronaut, moonWalk } from '../characters/astronaut.js';
-import { createLunarModule } from '../props/lunarModule.js';
-import { createMoonTerrain, createEarth } from '../props/terrain.js';
-import { createDustSystem, shardGeometry, GRAIN } from '../props/grains.js';
-import { lerp, easeInOut, easeOut, span, pulse, rng } from '../timeline.js';
-import { dolly, fixed } from '../camera.js';
+import { box, mat } from '/src/materials.js';
+import { createAstronaut, moonWalk } from '/src/characters/astronaut.js';
+import { createLunarModule } from '/src/props/lunarModule.js';
+import { createMoonTerrain, createEarth } from '/src/props/terrain.js';
+import { createDustSystem, shardGeometry, GRAIN } from '/src/props/grains.js';
+import { lerp, easeInOut, easeOut, span, pulse, rng } from '/src/timeline.js';
+import { dolly, fixed } from '/src/camera.js';
 
 const WALK_END = 7.0;
 const START = new THREE.Vector3(-2.6, 0, -3.2), END = new THREE.Vector3(0.4, 0, 1.0);

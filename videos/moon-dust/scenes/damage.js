@@ -1,11 +1,11 @@
 // Scene D (23.86 - 28.19 s): three cutaways. Shards saw through fabric fibres, scratch the
 // visor, and jam a wrist ring. Each is its own sub-group, switched on by time.
 import * as THREE from 'three';
-import { box, mat } from '../materials.js';
-import { shardGeometry, GRAIN } from '../props/grains.js';
-import { rng, span, easeInOut, easeOut, lerp } from '../timeline.js';
-import { dolly, fixed } from '../camera.js';
-import { SUIT } from '../characters/astronaut.js';
+import { box, mat } from '/src/materials.js';
+import { shardGeometry, GRAIN } from '/src/props/grains.js';
+import { rng, span, easeInOut, easeOut, lerp } from '/src/timeline.js';
+import { dolly, fixed } from '/src/camera.js';
+import { SUIT } from '/src/characters/astronaut.js';
 
 export function buildDamage() {
   const g = new THREE.Group(); g.name = 'scene_damage';

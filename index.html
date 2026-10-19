@@ -25,6 +25,11 @@
   <canvas id="gl"></canvas>
   <canvas id="captions"></canvas>
 </div>
-<script type="module" src="/src/main.js"></script>
+<script type="module">
+  // Which video to run: ?video=<slug>, else the slug in videos/current.txt.
+  const q = new URLSearchParams(location.search).get('video');
+  const slug = q || (await fetch('/videos/current.txt').then((r) => r.text())).trim();
+  await import(`/videos/${slug}/main.js`);
+</script>
 </body>
 </html>

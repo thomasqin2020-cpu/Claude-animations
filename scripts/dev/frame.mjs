@@ -9,7 +9,8 @@ const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromi
 const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
 page.on('console', m => { if (!m.text().includes('404')) console.log('console:', m.text()); });
 page.on('pageerror', e => console.log('PAGE ERROR', e.message));
-await page.goto(`http://localhost:${server.address().port}/`);
+const video = process.env.VIDEO || (await import('node:fs')).readFileSync('videos/current.txt', 'utf8').trim();
+await page.goto(`http://localhost:${server.address().port}/?video=${video}`);
 await page.waitForFunction(() => window.__animReady === true);
 for (const f of frames) {
   const r = await page.evaluate((fr) => { try { __anim.seek(fr); const v = __anim.validate(); v.cam = __dbg.camera.position.toArray().map(x => +x.toFixed(2)); return v; } catch (e) { return { error: e.stack }; } }, f);

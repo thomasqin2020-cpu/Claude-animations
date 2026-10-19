@@ -3,7 +3,8 @@ import { createServer } from '/home/user/Claude-animations/scripts/serve.js';
 const server = createServer(); await new Promise((r) => server.listen(0, r));
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', headless: true, args: ['--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--no-sandbox'] });
 const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
-await page.goto(`http://localhost:${server.address().port}/`);
+const video = process.env.VIDEO || (await import('node:fs')).readFileSync('videos/current.txt', 'utf8').trim();
+await page.goto(`http://localhost:${server.address().port}/?video=${video}`);
 await page.waitForFunction(() => window.__animReady === true);
 console.log(await page.evaluate(() => {
   __anim.seek(0);

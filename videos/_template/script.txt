@@ -1,0 +1,2 @@
+First narration line. One sentence per line; each line becomes one cue the timeline can cut on.
+Second narration line.
