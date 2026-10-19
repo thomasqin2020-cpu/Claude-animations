@@ -1,0 +1,20 @@
+{
+  "name": "claude-animations",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic Three.js explainer Short renderer (1080x1920 @ 30fps) with Playwright + FFmpeg export.",
+  "scripts": {
+    "preview": "node scripts/serve.js",
+    "render": "node scripts/render.js",
+    "render:frames": "node scripts/render.js --frames",
+    "validate": "node scripts/validate.js",
+    "contact-sheet": "node scripts/contact-sheet.js"
+  },
+  "dependencies": {
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "playwright": "1.64.1"
+  }
+}
