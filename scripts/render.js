@@ -52,7 +52,7 @@ if (validation.problems.length) { console.error('Validation failed'); process.ex
 const mp4 = path.join(OUT, outName);
 const ff = spawn('ffmpeg', [
   '-y', '-loglevel', 'error', '-f', 'image2pipe', '-framerate', String(info.fps), '-i', '-',
-  ...(audio ? ['-i', audio, '-map', '0:v:0', '-map', '1:a:0', '-c:a', 'aac', '-b:a', '192k', '-shortest'] : []),
+  ...(audio ? ['-i', audio, '-map', '0:v:0', '-map', '1:a:0', '-c:a', 'aac', '-b:a', '192k'] : []),
   '-c:v', 'libx264', '-preset', 'medium', '-crf', '17', '-pix_fmt', 'yuv420p', '-r', String(info.fps), '-movflags', '+faststart',
   mp4
 ], { stdio: ['pipe', 'inherit', 'inherit'] });

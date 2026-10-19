@@ -90,7 +90,7 @@ export function buildSurface(cues) {
     } else if (t < 7.36) {
       // Medium-close on the legs, tracking: the wear patches above the boots fade in.
       cam.position.set(p.x + 1.1, 0.55, p.z + 1.7); cam.lookAt(p.x, 0.42, p.z);
-    } else if (t < 9.0) {
+    } else if (t < 20) {
       // Push in on the boot and the kicked-up dust; this becomes the zoom into the micro world.
       dolly(cam, t, 7.36, 9.0, [p.x + 0.9, 0.5, p.z + 1.3], [p.x + 0.45, 0.12, p.z + 0.55], [p.x, 0.25, p.z], [p.x + 0.15, 0.03, p.z + 0.2], easeInOut);
     } else if (t < 32.6) {
