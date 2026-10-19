@@ -5,6 +5,10 @@ description: Turns a narration script plus visual direction into a finished vert
 
 # Explainer Short
 
+This skill runs inside the `Claude-animations` repository (github.com/thomasqin2020-cpu/Claude-animations,
+branch `claude/busy-ptolemy-u9u6w9` until merged). If the working directory is not that repo, clone it,
+run `npm install` and `pip install kokoro-onnx soundfile --break-system-packages`, and work there.
+
 Input: a narration script, and optionally the user's visual direction (style, scenes, camera
 ideas, what must be on screen). Output: `videos/<slug>/` with the source, and
 `out/<slug>/final-animation.mp4` verified with ffprobe, plus the file sent to the user.
