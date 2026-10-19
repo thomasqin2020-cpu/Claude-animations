@@ -44,7 +44,8 @@ The skill at `.claude/skills/explainer-short/SKILL.md` drives this. In short:
 
 ```
 cp -r videos/_template videos/<slug>          # edit main.js, script.txt, scenes/
-python3 scripts/tts.py --video <slug>          # narration + cue times
+python3 scripts/tts.py --video <slug>          # narration + cue times (Kokoro, local)
+# or: ELEVENLABS_API_KEY=... python3 scripts/tts.py --video <slug> --engine elevenlabs --voice <voice_id>
 node scripts/dev/frame.mjs 0 90 180            # spot frames to out/dev/
 node scripts/render.js --video <slug>          # out/<slug>/final-animation.mp4
 node scripts/contact-sheet.js --video <slug> --cuts=9,13.5

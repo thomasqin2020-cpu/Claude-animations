@@ -31,7 +31,9 @@ in `src/` and `scripts/`. Read `references/library.md` before writing any scene 
    units, abbreviations).
 3. **Narration first, then timing.** Run
    `python3 scripts/tts.py --video <slug> --voice am_michael --speed 1.05` (voices in
-   `references/library.md`). It writes `audio/narration.wav` and `narration.js` with exact
+   `references/library.md`). For an ElevenLabs voice, export `ELEVENLABS_API_KEY` and run
+   `python3 scripts/tts.py --video <slug> --engine elevenlabs --voice <voice_id>`
+   (`--list-voices` prints the account's voices). Same output files either way. It writes `audio/narration.wav` and `narration.js` with exact
    cue start and end times and prints them. Target 25 to 40 s for a Short. If the user
    supplied a recorded voiceover, put it at `videos/<slug>/audio/narration.wav`, measure cue
    times from it (ffprobe plus listening or a transcript), and write `narration.js` by hand
@@ -77,6 +79,8 @@ in `src/` and `scripts/`. Read `references/library.md` before writing any scene 
 - Captions only when they add understanding; short, inside y 1400 to 1600 (the vertical
   safe area), never over the subject.
 - Cuts on cue boundaries use `C[n]` from `narration.js`, never a hard-coded second value
-  that can round differently from the cue.
+  that can round differently from the cue. Beats inside a line are written relative to the
+  cue too (`C[n] + 1.2`, or a fraction of the line via `lerp(C[n], C[n+1], 0.6)`), so a
+  re-synthesized voice with different timing re-times the whole video without edits.
 - The narration file is the clock. Re-running `tts.py` re-times the whole video; never edit
   `narration.js` by hand except for a user-supplied recording.
