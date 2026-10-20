@@ -2,18 +2,27 @@
 (cue start/end per line) so the master timeline is driven by the real audio.
 
 Engines:
-  kokoro      local, free, deterministic (default). --voice am_michael, --speed 1.05
-  elevenlabs  ElevenLabs REST API. Needs ELEVENLABS_API_KEY in the environment.
-              --voice <voice_id> (run --list-voices to see yours), --model eleven_multilingual_v2
+  elevenlabs  default whenever ELEVENLABS_API_KEY is set (environment or .env.local).
+              --voice <voice_id> (default ELEVENLABS_VOICE; --list-voices shows yours),
+              --model eleven_multilingual_v2, --add-voice <library_voice_id> adds a library voice.
+  kokoro      local, free, deterministic fallback. --voice am_michael, --speed 1.05
 Line-by-line synthesis is what makes the cue times exact; one call per line.
 """
 import os, sys, json, argparse, numpy as np, soundfile as sf
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# .env.local (gitignored) supplies secrets when the environment does not.
+_env = os.path.join(ROOT, '.env.local')
+if os.path.exists(_env):
+    for line in open(_env):
+        line = line.strip()
+        if line and not line.startswith('#') and '=' in line:
+            k, v = line.split('=', 1); os.environ.setdefault(k.strip(), v.strip())
 ap = argparse.ArgumentParser()
 ap.add_argument('--video', default=open(os.path.join(ROOT, 'videos/current.txt')).read().strip())
-ap.add_argument('--engine', choices=['kokoro', 'elevenlabs'], default='kokoro')
+ap.add_argument('--engine', choices=['kokoro', 'elevenlabs'], default='elevenlabs' if os.environ.get('ELEVENLABS_API_KEY') else 'kokoro')
 ap.add_argument('--voice', default=None)
+ap.add_argument('--add-voice', default=None, help='elevenlabs: add a voice-library voice to the account (voice_id), then exit')
 ap.add_argument('--speed', type=float, default=1.0)
 ap.add_argument('--model', default='eleven_multilingual_v2', help='elevenlabs model_id')
 ap.add_argument('--stability', type=float, default=0.5)
@@ -51,8 +60,14 @@ def elevenlabs_engine():
         r = requests.get('https://api.elevenlabs.io/v1/voices', headers=H, timeout=30); r.raise_for_status()
         for v in r.json().get('voices', []): print(f"{v['voice_id']}  {v['name']}  {v.get('labels', {})}")
         sys.exit(0)
-    voice = args.voice
-    if not voice: sys.exit('--voice <voice_id> is required for elevenlabs (see --list-voices)')
+    if args.add_voice:
+        r = requests.get('https://api.elevenlabs.io/v1/shared-voices', headers=H, params={'search': args.add_voice, 'page_size': 5}, timeout=30); r.raise_for_status()
+        hit = next((v for v in r.json().get('voices', []) if v['voice_id'] == args.add_voice), None)
+        if not hit: sys.exit('voice not found in the library: ' + args.add_voice)
+        r = requests.post(f"https://api.elevenlabs.io/v1/voices/add/{hit['public_owner_id']}/{hit['voice_id']}", headers=H, json={'new_name': hit['name'].split(' - ')[0]}, timeout=30)
+        print(r.status_code, r.text[:300]); sys.exit(0 if r.ok else 1)
+    voice = args.voice or os.environ.get('ELEVENLABS_VOICE')
+    if not voice: sys.exit('--voice <voice_id> is required for elevenlabs (or set ELEVENLABS_VOICE; see --list-voices)')
     def synth(line):
         # pcm_24000 returns raw 16-bit little-endian mono at 24 kHz, which matches the Kokoro path.
         r = requests.post(f'https://api.elevenlabs.io/v1/text-to-speech/{voice}', params={'output_format': 'pcm_24000'},

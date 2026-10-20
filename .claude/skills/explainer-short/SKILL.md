@@ -29,11 +29,14 @@ in `src/` and `scripts/`. Read `references/library.md` before writing any scene 
    sentence per line: each line becomes a cue the timeline can cut on, so split long
    sentences where you want a cut. Apply `references/tts-formatting.md` (spell out numbers,
    units, abbreviations).
-3. **Narration first, then timing.** Run
-   `python3 scripts/tts.py --video <slug> --voice am_michael --speed 1.05` (voices in
-   `references/library.md`). For an ElevenLabs voice, export `ELEVENLABS_API_KEY` and run
-   `python3 scripts/tts.py --video <slug> --engine elevenlabs --voice <voice_id>`
-   (`--list-voices` prints the account's voices). Same output files either way. It writes `audio/narration.wav` and `narration.js` with exact
+3. **Narration first, then timing.** Run `python3 scripts/tts.py --video <slug>`. The
+   default engine is ElevenLabs with the narrator in `ELEVENLABS_VOICE`; the key and voice
+   come from the environment or from `.env.local` at the repo root (gitignored). Do not ask
+   the user for the key or the voice when either source has them. If no key is found
+   anywhere, ask once, write it to `.env.local`, and carry on. Thomas's standing choices:
+   voice Jarnathan (`c6SfcYrb2t09NHXiT80T`, needs a paid plan; add with
+   `--add-voice c6SfcYrb2t09NHXiT80T`), fallback Adam (`pNInz6obpgDQGcFmaJgB`). Kokoro
+   (`--engine kokoro --voice am_michael --speed 1.05`) is the offline fallback only. It writes `audio/narration.wav` and `narration.js` with exact
    cue start and end times and prints them. Target 25 to 40 s for a Short. If the user
    supplied a recorded voiceover, put it at `videos/<slug>/audio/narration.wav`, measure cue
    times from it (ffprobe plus listening or a transcript), and write `narration.js` by hand
@@ -84,3 +87,7 @@ in `src/` and `scripts/`. Read `references/library.md` before writing any scene 
   re-synthesized voice with different timing re-times the whole video without edits.
 - The narration file is the clock. Re-running `tts.py` re-times the whole video; never edit
   `narration.js` by hand except for a user-supplied recording.
+- Changing the voice on an existing video: keep the cue times the scenes were authored
+  against in `narration-design.js` (copy the old `narration.js`, rename the export to
+  `DESIGN`), pass `design: DESIGN` to `runVideo`, and build `C` from `DESIGN`. The runtime
+  warps the new narration onto the design timeline, so no scene edits are needed.
