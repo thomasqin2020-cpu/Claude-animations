@@ -11,6 +11,7 @@ import { validateScene } from './validate.js';
  * @param {{duration:number,cues:{start:number,end:number,text:string}[]}} cfg.narration
  * @param {string} cfg.audio  URL of the narration file for the preview player
  * @param {number} [cfg.fov]  vertical field of view in degrees (default 40)
+ * @param {boolean} [cfg.subtitles]  burned-in narration subtitles in the top band (default true)
  * @param {object} [cfg.design] a narration object whose cue times the scenes were authored
  *   against. When given, real time is warped piecewise-linearly onto the design timeline
  *   (line starts and ends are the anchors), so a re-synthesized voice with different pacing
@@ -57,6 +58,7 @@ export function runVideo(cfg) {
     renderer.render(scene, camera);
     captions.clear();
     if (active.scene.captions) active.scene.captions(t, captions);
+    if (cfg.subtitles !== false) captions.subtitle(cfg.narration.cues, frame / FPS, cfg.subtitleStyle);
   }
 
   window.__anim = {

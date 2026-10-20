@@ -38,13 +38,13 @@ export function buildRigs(C) {
   const joint = new THREE.Mesh(new THREE.SphereGeometry(0.09, 10, 8), mat(LAB.accent)); g.add(joint);
   const blockS = hanger(); g.add(blockS);
   const blockSLabel = createLabel('3.0 N', { size: 0.2, bg: null, color: '#1a1a1a' }); g.add(blockSLabel);
-  const k1Label = createLabel('k₁ = 10 N/m', { size: 0.2, color: '#5aa9ff' }); k1Label.position.set(-1.05, BEAM_Y - 0.45, 0.2); g.add(k1Label);
+  const k1Label = createLabel('k₁ = 10 N/m', { size: 0.2, color: '#5aa9ff' }); k1Label.position.set(-1.05, BEAM_Y - 0.95, 0.2); g.add(k1Label);
   const k2Label = createLabel('k₂ = 20 N/m', { size: 0.2, color: '#ffa040' }); g.add(k2Label);
   const tS1 = createArrow(LAB.coral, { label: '3.0 N', labelOffset: [-0.48, 0, 0] }); g.add(tS1);
   const tS2 = createArrow(LAB.coral, { label: '3.0 N', labelOffset: [-0.48, 0, 0] }); g.add(tS2);
   const br1 = bracket(X1, 'x₁'); g.add(br1); const br2 = bracket(X2, 'x₂'); g.add(br2);
   const brSum = bracket(X1 + X2, 'x'); g.add(brSum);
-  const ksLabel = createLabel('kₛ = 6.7 N/m', { size: 0.24, color: '#7bd389' }); ksLabel.position.set(0, BEAM_Y + 0.55, 0.3); g.add(ksLabel);
+  const ksLabel = createLabel('kₛ = 6.7 N/m', { size: 0.24, color: '#7bd389' }); ksLabel.position.set(0.55, BEAM_Y - 0.5, 0.3); g.add(ksLabel);
   const l0a = box(0.5, 0.02, 0.02, mat(0x9aa3b5), 0.003); l0a.position.set(0, BEAM_Y - NAT, 0); g.add(l0a);   // natural-length marks
   const l0b = box(0.5, 0.02, 0.02, mat(0x9aa3b5), 0.003); g.add(l0b);
 
@@ -60,9 +60,9 @@ export function buildRigs(C) {
   const tP1 = createArrow(LAB.coral, { label: '1.0 N', labelOffset: [-0.34, 0, 0] }); g.add(tP1);
   const tP2 = createArrow(LAB.coral, { label: '2.0 N', labelOffset: [0.34, 0, 0] }); g.add(tP2);
   const brP = bracket(XP, 'x = 0.10 m'); g.add(brP);
-  const kpLabel = createLabel('kₚ = 30 N/m', { size: 0.24, color: '#7bd389' }); kpLabel.position.set(PX, BEAM_Y + 0.55, 0.3); g.add(kpLabel);
-  const k1pLabel = createLabel('k₁', { size: 0.2, color: '#5aa9ff' }); k1pLabel.position.set(xa - 0.4, BEAM_Y - 0.35, 0.2); g.add(k1pLabel);
-  const k2pLabel = createLabel('k₂', { size: 0.2, color: '#ffa040' }); k2pLabel.position.set(xb + 0.4, BEAM_Y - 0.35, 0.2); g.add(k2pLabel);
+  const kpLabel = createLabel('kₚ = 30 N/m', { size: 0.24, color: '#7bd389' }); kpLabel.position.set(PX, BEAM_Y - 0.55, 0.3); g.add(kpLabel);
+  const k1pLabel = createLabel('k₁', { size: 0.2, color: '#5aa9ff' }); k1pLabel.position.set(xa - 0.4, BEAM_Y - 0.6, 0.2); g.add(k1pLabel);
+  const k2pLabel = createLabel('k₂', { size: 0.2, color: '#ffa040' }); k2pLabel.position.set(xb + 0.4, BEAM_Y - 0.6, 0.2); g.add(k2pLabel);
   const pLabel = createLabel('⅔ w', { size: 0.18, bg: null, color: '#c9d2e6' }); g.add(pLabel);
   const l0p = box(W + 0.9, 0.02, 0.02, mat(0x9aa3b5), 0.003); l0p.position.set(PX, BEAM_Y - NAT, 0); g.add(l0p);
 

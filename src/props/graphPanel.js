@@ -17,7 +17,7 @@ export function createGraphPanel(opts = {}) {
   const xAxis = box(w - 2 * pad + 0.2, 0.03, 0.03, axisMat, 0.005); xAxis.position.set(toX(x0) + (w - 2 * pad) / 2 + 0.1 - 0.1, toY(y0), 0.01); g.add(xAxis);
   const yAxis = box(0.03, h - 2 * pad + 0.2, 0.03, axisMat, 0.005); yAxis.position.set(toX(x0), toY(y0) + (h - 2 * pad) / 2, 0.01); g.add(yAxis);
   if (opts.xLabel) { const l = createLabel(opts.xLabel, { size: 0.22, bg: null }); l.position.set(toX(x1) + 0.15, toY(y0) - 0.02, 0.05); g.add(l); }
-  if (opts.yLabel) { const l = createLabel(opts.yLabel, { size: 0.22, bg: null }); l.position.set(toX(x0) + 0.3, toY(y1) + 0.05, 0.05); g.add(l); }
+  if (opts.yLabel) { const l = createLabel(opts.yLabel, { size: 0.22, bg: null }); l.position.set(toX(x0) + 0.55, toY(y1) - 0.62, 0.05); g.add(l); }
   for (const t of opts.xTicks ?? []) { const tk = box(0.02, 0.1, 0.02, axisMat, 0.004); tk.position.set(toX(t.v), toY(y0), 0.01); g.add(tk); if (t.label) { const l = createLabel(t.label, { size: 0.16, bg: null }); l.position.set(toX(t.v), toY(y0) - 0.16, 0.05); g.add(l); } }
   for (const t of opts.yTicks ?? []) { const tk = box(0.1, 0.02, 0.02, axisMat, 0.004); tk.position.set(toX(x0), toY(t.v), 0.01); g.add(tk); if (t.label) { const l = createLabel(t.label, { size: 0.16, bg: null }); l.position.set(toX(x0) - 0.22, toY(t.v), 0.05); g.add(l); } }
 

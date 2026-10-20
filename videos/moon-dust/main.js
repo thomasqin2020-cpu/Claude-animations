@@ -1,16 +1,18 @@
 // Moon Dust (idea 40). Scenes are scheduled on narration cue times: C[n] is the start of line n.
 import { runVideo } from '/src/app.js';
 import { NARRATION } from './narration.js';
+import { DESIGN } from './narration-design.js';
 import { buildSurface } from './scenes/surface.js';
 import { buildEarthMicro } from './scenes/earthMicro.js';
 import { buildMoonMicro } from './scenes/moonMicro.js';
 import { buildDamage } from './scenes/damage.js';
 
-const C = NARRATION.cues.map((c) => c.start);
+const C = DESIGN.cues.map((c) => c.start);   // scenes authored on the design timeline
 const surface = buildSurface(), earthMicro = buildEarthMicro(), moonMicro = buildMoonMicro(), damage = buildDamage();
 
 runVideo({
   narration: NARRATION,
+  design: DESIGN,
   audio: '/videos/moon-dust/audio/narration.wav',
   scenes: [
     { name: 'A surface walk',   start: 0,    end: C[2], scene: surface,    bg: 0x000000 },

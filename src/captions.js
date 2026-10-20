@@ -26,6 +26,32 @@ export function createCaptions(canvas) {
       });
       ctx.restore();
     },
+    // Burned-in subtitle for the narration line active at REAL time t. Word-wrapped to the
+    // central safe width, placed in the top band (below the Shorts title area). Words fill
+    // from dim to white across the line's duration, a karaoke-style progress cue.
+    subtitle(cues, t, opts = {}) {
+      const cue = cues.find((c) => t >= c.start - 0.15 && t <= c.end + 0.35);
+      if (!cue) return;
+      const size = opts.size ?? 44, maxW = opts.maxWidth ?? 860, y0 = opts.y ?? 258;
+      ctx.save();
+      ctx.globalAlpha = Math.min(1, easeOut(span(t, cue.start - 0.15, cue.start + 0.1)), 1 - span(t, cue.end + 0.15, cue.end + 0.35));
+      ctx.font = `800 ${size}px "Inter", "Helvetica Neue", Arial, sans-serif`;
+      ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+      const words = cue.text.split(/\s+/); const lines = []; let cur = [];
+      for (const w of words) { const test = [...cur, w].join(' '); if (ctx.measureText(test).width > maxW && cur.length) { lines.push(cur); cur = [w]; } else cur.push(w); }
+      if (cur.length) lines.push(cur);
+      const progress = span(t, cue.start, cue.end) * words.length; let idx = 0;
+      lines.forEach((ln, li) => {
+        const text = ln.join(' '); const width = ctx.measureText(text).width; let x = WIDTH / 2 - width / 2; const y = y0 + (li - (lines.length - 1) / 2) * size * 1.25;
+        for (const w of ln) {
+          const lit = idx < progress; idx++;
+          ctx.lineWidth = size * 0.22; ctx.strokeStyle = 'rgba(8,10,16,0.9)'; ctx.strokeText(w, x, y);
+          ctx.fillStyle = lit ? (opts.color ?? '#ffffff') : 'rgba(255,255,255,0.45)'; ctx.fillText(w, x, y);
+          x += ctx.measureText(w + ' ').width;
+        }
+      });
+      ctx.restore();
+    },
     // Horizontal gauge with a label; value is 0..1 and already a function of t.
     gauge(label, value, t, start, end, opts = {}) {
       if (t < start || t > end) return;

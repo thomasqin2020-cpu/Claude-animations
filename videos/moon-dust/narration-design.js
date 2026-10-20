@@ -1,0 +1,62 @@
+// Kokoro cue times the scenes were authored against; the runtime warps the real narration onto them.
+export const DESIGN = {
+  "engine": "kokoro",
+  "voice": "am_michael",
+  "duration": 36.179,
+  "cues": [
+    {
+      "i": 0,
+      "text": "After eight hours on the Moon, Apollo 12's suits were more worn than training suits used for a hundred hours.",
+      "start": 0.35,
+      "end": 6.98
+    },
+    {
+      "i": 1,
+      "text": "The culprit was dust.",
+      "start": 7.36,
+      "end": 8.622
+    },
+    {
+      "i": 2,
+      "text": "On Earth, wind and water tumble sand into smooth, rounded grains.",
+      "start": 9.002,
+      "end": 13.13
+    },
+    {
+      "i": 3,
+      "text": "The Moon has neither.",
+      "start": 13.51,
+      "end": 14.631
+    },
+    {
+      "i": 4,
+      "text": "For billions of years, meteorite impacts have smashed its rock into jagged shards and tiny glass fragments.",
+      "start": 15.011,
+      "end": 21.818
+    },
+    {
+      "i": 5,
+      "text": "Every step kicks them up.",
+      "start": 22.198,
+      "end": 23.476
+    },
+    {
+      "i": 6,
+      "text": "They grind through fabric, scratch visors, and jam the wrist locks.",
+      "start": 23.856,
+      "end": 27.812
+    },
+    {
+      "i": 7,
+      "text": "Brushing clears the coarse grains. The fine ones cling to everything.",
+      "start": 28.192,
+      "end": 32.098
+    },
+    {
+      "i": 8,
+      "text": "Two more moonwalks, and the suits could have lost pressure.",
+      "start": 32.478,
+      "end": 35.279
+    }
+  ]
+};

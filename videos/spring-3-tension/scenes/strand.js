@@ -24,7 +24,7 @@ export function buildStrand(C) {
   const probeLabel = createLabel('T = 3.0 N', { size: 0.24, color: '#ffb347' }); g.add(probeLabel);
   // free-body slab on a short piece of the coil
   const slab = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.46, 0.46), mat(LAB.purple, { transparent: true, opacity: 0.35, emissive: LAB.purple, emissiveIntensity: 0.5 })); slab.position.set(X0 + L / 2, Y, 0); slab.visible = false; g.add(slab);
-  const dmLabel = createLabel('Δm', { size: 0.2, color: '#c9b8ff' }); dmLabel.position.set(X0 + L / 2, Y + 0.42, 0.1); dmLabel.visible = false; g.add(dmLabel);
+  const dmLabel = createLabel('Δm', { size: 0.2, color: '#c9b8ff' }); dmLabel.position.set(X0 + L / 2, Y - 0.5, 0.1); dmLabel.visible = false; g.add(dmLabel);
   const t1 = createArrow(LAB.coral, { label: 'T₁', labelSize: 0.11, labelOffset: [0, -0.2, 0.15] }); g.add(t1);
   const t2 = createArrow(LAB.coral, { label: 'T₂', labelSize: 0.11, labelOffset: [0, -0.2, 0.15] }); g.add(t2);
   // wall + block version
