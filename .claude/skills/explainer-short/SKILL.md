@@ -34,8 +34,8 @@ in `src/` and `scripts/`. Read `references/library.md` before writing any scene 
    come from the environment or from `.env.local` at the repo root (gitignored). Do not ask
    the user for the key or the voice when either source has them. If no key is found
    anywhere, ask once, write it to `.env.local`, and carry on. Thomas's standing choices:
-   voice Jarnathan (`c6SfcYrb2t09NHXiT80T`, needs a paid plan; add with
-   `--add-voice c6SfcYrb2t09NHXiT80T`), fallback Adam (`pNInz6obpgDQGcFmaJgB`). Kokoro
+   voice Jarnathan (`c6SfcYrb2t09NHXiT80T`, already on the account), fallback Adam
+   (`pNInz6obpgDQGcFmaJgB`). Kokoro
    (`--engine kokoro --voice am_michael --speed 1.05`) is the offline fallback only. It writes `audio/narration.wav` and `narration.js` with exact
    cue start and end times and prints them. Target 25 to 40 s for a Short. If the user
    supplied a recorded voiceover, put it at `videos/<slug>/audio/narration.wav`, measure cue
