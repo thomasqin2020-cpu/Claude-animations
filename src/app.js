@@ -1,7 +1,7 @@
 // Shared runtime for every video. A video's main.js calls runVideo() with its scene list;
 // everything else (renderer, deterministic seek, capture, validation, preview) lives here.
 import * as THREE from 'three';
-import { FPS, WIDTH, HEIGHT, makeTimeline } from './timeline.js';
+import { FPS, WIDTH as W0, HEIGHT as H0, makeTimeline } from './timeline.js';
 import { createCaptions } from './captions.js';
 import { validateScene } from './validate.js';
 
@@ -11,12 +11,14 @@ import { validateScene } from './validate.js';
  * @param {{duration:number,cues:{start:number,end:number,text:string}[]}} cfg.narration
  * @param {string} cfg.audio  URL of the narration file for the preview player
  * @param {number} [cfg.fov]  vertical field of view in degrees (default 40)
+ * @param {number} [cfg.width], [cfg.height]  frame size; default 1080x1920 (Short). Pass 1920x1080 for 16:9.
  * @param {object} [cfg.design] a narration object whose cue times the scenes were authored
  *   against. When given, real time is warped piecewise-linearly onto the design timeline
  *   (line starts and ends are the anchors), so a re-synthesized voice with different pacing
  *   keeps every beat inside the right sentence without touching scene code.
  */
 export function runVideo(cfg) {
+  const WIDTH = cfg.width ?? W0, HEIGHT = cfg.height ?? H0;
   const glCanvas = document.getElementById('gl');
   const renderer = new THREE.WebGLRenderer({ canvas: glCanvas, antialias: true, preserveDrawingBuffer: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(1);
@@ -27,7 +29,7 @@ export function runVideo(cfg) {
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = cfg.exposure ?? 1.05;
 
-  const captions = createCaptions(document.getElementById('captions'));
+  const captions = createCaptions(document.getElementById('captions'), WIDTH, HEIGHT);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(cfg.fov ?? 40, WIDTH / HEIGHT, 0.05, 300);
   for (const s of cfg.scenes) scene.add(s.scene.group);
