@@ -44,7 +44,7 @@ export function buildRigs(C) {
   const tS2 = createArrow(LAB.coral, { label: '3.0 N', labelOffset: [-0.48, 0, 0] }); g.add(tS2);
   const br1 = bracket(X1, 'x₁'); g.add(br1); const br2 = bracket(X2, 'x₂'); g.add(br2);
   const brSum = bracket(X1 + X2, 'x'); g.add(brSum);
-  const ksLabel = createLabel('kₛ = 6.7 N/m', { size: 0.24, color: '#7bd389' }); ksLabel.position.set(0.55, BEAM_Y - 0.5, 0.3); g.add(ksLabel);
+  const ksLabel = createLabel('kₛ = 6.7 N/m', { size: 0.24, color: '#7bd389' }); ksLabel.position.set(0.55, BEAM_Y - 0.88, 0.3); g.add(ksLabel);
   const l0a = box(0.5, 0.02, 0.02, mat(0x9aa3b5), 0.003); l0a.position.set(0, BEAM_Y - NAT, 0); g.add(l0a);   // natural-length marks
   const l0b = box(0.5, 0.02, 0.02, mat(0x9aa3b5), 0.003); g.add(l0b);
 
