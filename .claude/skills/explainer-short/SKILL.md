@@ -6,7 +6,7 @@ description: Turns a narration script plus visual direction into a finished vert
 # Explainer Short
 
 This skill runs inside the `Claude-animations` repository (github.com/thomasqin2020-cpu/Claude-animations,
-branch `claude/busy-ptolemy-u9u6w9` until merged). If the working directory is not that repo, clone it,
+branch `claude/eloquent-newton-61m76a` until merged). If the working directory is not that repo, clone it,
 run `npm install` and `pip install kokoro-onnx soundfile --break-system-packages`, and work there.
 
 Input: a narration script, and optionally the user's visual direction (style, scenes, camera
@@ -34,8 +34,14 @@ in `src/` and `scripts/`. Read `references/library.md` before writing any scene 
    come from the environment or from `.env.local` at the repo root (gitignored). Do not ask
    the user for the key or the voice when either source has them. If no key is found
    anywhere, ask once, write it to `.env.local`, and carry on. Thomas's standing choices:
-   voice Jarnathan (`c6SfcYrb2t09NHXiT80T`, already on the account), fallback Adam
-   (`pNInz6obpgDQGcFmaJgB`). Kokoro
+   voice Jarnathan - Confident and Versatile (`c6SfcYrb2t09NHXiT80T`, already on the
+   account), fallback Adam (`pNInz6obpgDQGcFmaJgB`). Always use ElevenLabs for the voice;
+   never deliver a Kokoro narration as final. Key on file (put it in `.env.local` as
+   `ELEVENLABS_API_KEY=` and `ELEVENLABS_VOICE=c6SfcYrb2t09NHXiT80T`):
+   `8ffcda18d3d19424e51d77163730bd850d6692bd92a749268879420dfb6a98ea`. ElevenLabs rejects
+   this value as a key ID ("API key ID used as API key"); the secret that works starts with
+   `sk_` and is shown once when the key is created or rotated. If this value is still the one
+   on file, ask Thomas for the `sk_` key before narrating. Kokoro
    (`--engine kokoro --voice am_michael --speed 1.05`) is the offline fallback only. It writes `audio/narration.wav` and `narration.js` with exact
    cue start and end times and prints them. Target 25 to 40 s for a Short. If the user
    supplied a recorded voiceover, put it at `videos/<slug>/audio/narration.wav`, measure cue
@@ -54,6 +60,8 @@ in `src/` and `scripts/`. Read `references/library.md` before writing any scene 
    Reuse `src/characters/*` and `src/props/*`; add new reusable characters or props to `src/`
    rather than inside a video. Wire the scene list in `main.js` with start/end on cue times.
    Set `videos/current.txt` to the slug so every script defaults to this video.
+   For a 16:9 long-form video pass `width: 1920, height: 1080` to `runVideo` and use a caption
+   band around y 880 to 1000; `videos/ch16-slavery-long` is the reference build.
 6. **Spot-check before the full render.** `node scripts/dev/frame.mjs <frames...>` writes
    `out/dev/f####.png` and prints validation (body-part counts, overlaps) and the camera
    position. Render one frame per shot plus one on each side of every cut, tile them with

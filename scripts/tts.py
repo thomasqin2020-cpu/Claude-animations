@@ -83,7 +83,7 @@ synth, VOICE = kokoro_engine() if args.engine == 'kokoro' else elevenlabs_engine
 
 # ---------------------------------------------------------------- assemble
 VDIR = os.path.join(ROOT, 'videos', args.video); os.makedirs(os.path.join(VDIR, 'audio'), exist_ok=True)
-lines = [l.strip() for l in open(os.path.join(VDIR, 'script.txt')) if l.strip()]
+lines = [l.strip() for l in open(os.path.join(VDIR, 'script.txt')) if l.strip() and not l.lstrip().startswith('#')]  # '#' lines are build comments
 chunks, cues = [], []
 t = LEAD; chunks.append(np.zeros(int(LEAD * SR), dtype=np.float32))
 for i, line in enumerate(lines):

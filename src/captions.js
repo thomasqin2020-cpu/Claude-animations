@@ -1,8 +1,8 @@
 // 2D caption layer drawn on an overlay canvas. Kept inside the vertical safe area
 // (top 15% and bottom 25% avoided) so YouTube UI never covers it.
-import { WIDTH, HEIGHT, span, easeOut } from './timeline.js';
+import { WIDTH as W0, HEIGHT as H0, span, easeOut } from './timeline.js';
 
-export function createCaptions(canvas) {
+export function createCaptions(canvas, WIDTH = W0, HEIGHT = H0) {
   canvas.width = WIDTH; canvas.height = HEIGHT;
   const ctx = canvas.getContext('2d');
   const alphaIn = (t, start, end) => Math.min(easeOut(span(t, start, start + 0.25)), 1 - easeOut(span(t, end - 0.25, end)));
@@ -15,7 +15,7 @@ export function createCaptions(canvas) {
       const y = opts.y ?? HEIGHT * 0.76, size = opts.size ?? 76;
       const pop = 1 + 0.06 * (1 - easeOut(span(t, start, start + 0.25)));
       ctx.save(); ctx.globalAlpha = alpha;
-      ctx.translate(WIDTH / 2, y); ctx.scale(pop, pop);
+      ctx.translate(opts.x ?? WIDTH / 2, y); ctx.scale(pop, pop);
       ctx.font = `800 ${size}px "Inter", "Helvetica Neue", Arial, sans-serif`;
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
       const lines = String(text).split('\n');
