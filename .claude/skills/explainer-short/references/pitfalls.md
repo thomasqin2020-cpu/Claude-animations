@@ -50,3 +50,6 @@ Every item below shipped once and confused the viewer. Check each before deliver
 - **Overlapping labels.** Several world labels at one spot (NO ENTRY / NO VOTE / NO SCHOOL,
   the abolitionist trio's banners over heads). Space them or show one at a time.
 - **No narration subtitles.** Always burn them in (`scripts/subtitles.py --burn`).
+16. **Wait loops that wait on themselves.** `while pgrep -f "subtitles.py"` matches its own shell
+    command line, so it never exits, and `pkill -f` on the same pattern kills the calling shell.
+    Wait on a PID (`cmd & pid=$!; wait $pid`) or on the output file's "wrote" log line instead.
