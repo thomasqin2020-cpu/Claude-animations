@@ -36,12 +36,25 @@ in `src/` and `scripts/`. Read `references/library.md` before writing any scene 
    anywhere, ask once, write it to `.env.local`, and carry on. Thomas's standing choices:
    voice Jarnathan - Confident and Versatile (`c6SfcYrb2t09NHXiT80T`, already on the
    account), fallback Adam (`pNInz6obpgDQGcFmaJgB`). Always use ElevenLabs for the voice;
-   never deliver a Kokoro narration as final. Key on file (put it in `.env.local` as
-   `ELEVENLABS_API_KEY=` and `ELEVENLABS_VOICE=c6SfcYrb2t09NHXiT80T`):
-   `8ffcda18d3d19424e51d77163730bd850d6692bd92a749268879420dfb6a98ea`. ElevenLabs rejects
-   this value as a key ID ("API key ID used as API key"); the secret that works starts with
-   `sk_` and is shown once when the key is created or rotated. If this value is still the one
-   on file, ask Thomas for the `sk_` key before narrating. Kokoro
+   never deliver a Kokoro narration as final. Two ways to reach ElevenLabs, in this order:
+   - **API key (preferred for full videos).** `ELEVENLABS_API_KEY` (starts with `sk_`) from the
+     environment secret or `.env.local`; `tts.py` then synthesizes every line in one command.
+     Never write the key into this file or any committed file: the repo is public. A 64-character
+     hex value is a key ID, not a key; ElevenLabs rejects it.
+   - **ElevenLabs connector (no key needed).** If no key is set but the ElevenLabs connector is
+     attached (tools named `creative_generate_speech`, `creative_get_flow_run_status`), use it.
+     For each non-comment line of `script.txt`, in order: call `creative_generate_speech` with
+     the line as `prompt`, `voice_id` `c6SfcYrb2t09NHXiT80T`, `model_id`
+     `eleven_multilingual_v2`, `generations_count` 1 (the default 2 doubles the credits), and one
+     shared `flow_id` (create it with `creative_create_flow` first). Poll
+     `creative_get_flow_run_status` until `all_completed`, then download each generation's
+     `content_url` (a signed MP3 link that expires after 2 hours) with curl to
+     `<dir>/line_NNN.mp3`, NNN being the zero-padded line index. Never re-call a generation to
+     retry: each call is charged. Then run
+     `python3 scripts/tts.py --video <slug> --engine files --clips <dir> --voice c6SfcYrb2t09NHXiT80T`,
+     which trims and assembles the clips and writes the cue times exactly like the API path.
+     Tested on 2026-10-23: one line cost 74 credits and downloaded fine.
+   Kokoro
    (`--engine kokoro --voice am_michael --speed 1.05`) is the offline fallback only. It writes `audio/narration.wav` and `narration.js` with exact
    cue start and end times and prints them. Target 25 to 40 s for a Short. If the user
    supplied a recorded voiceover, put it at `videos/<slug>/audio/narration.wav`, measure cue

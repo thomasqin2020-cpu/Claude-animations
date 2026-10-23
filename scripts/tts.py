@@ -5,6 +5,8 @@ Engines:
   elevenlabs  default whenever ELEVENLABS_API_KEY is set (environment or .env.local).
               --voice <voice_id> (default ELEVENLABS_VOICE; --list-voices shows yours),
               --model eleven_multilingual_v2, --add-voice <library_voice_id> adds a library voice.
+  files       pre-made clips, one per script line, in --clips <dir> named line_000.mp3, line_001.mp3,
+              ... (any format ffmpeg reads). Used with the ElevenLabs connector when no API key is set.
   kokoro      local, free, deterministic fallback. --voice am_michael, --speed 1.05
 Line-by-line synthesis is what makes the cue times exact; one call per line.
 """
@@ -20,8 +22,9 @@ if os.path.exists(_env):
             k, v = line.split('=', 1); os.environ.setdefault(k.strip(), v.strip())
 ap = argparse.ArgumentParser()
 ap.add_argument('--video', default=open(os.path.join(ROOT, 'videos/current.txt')).read().strip())
-ap.add_argument('--engine', choices=['kokoro', 'elevenlabs'], default='elevenlabs' if os.environ.get('ELEVENLABS_API_KEY') else 'kokoro')
+ap.add_argument('--engine', choices=['kokoro', 'elevenlabs', 'files'], default='elevenlabs' if os.environ.get('ELEVENLABS_API_KEY') else 'kokoro')
 ap.add_argument('--voice', default=None)
+ap.add_argument('--clips', default=None, help='files engine: directory of line_NNN.* clips')
 ap.add_argument('--add-voice', default=None, help='elevenlabs: add a voice-library voice to the account (voice_id), then exit')
 ap.add_argument('--speed', type=float, default=1.0)
 ap.add_argument('--model', default='eleven_multilingual_v2', help='elevenlabs model_id')
@@ -79,7 +82,19 @@ def elevenlabs_engine():
         return np.frombuffer(r.content, dtype='<i2').astype(np.float32) / 32768.0, SR
     return synth, voice
 
-synth, VOICE = kokoro_engine() if args.engine == 'kokoro' else elevenlabs_engine()
+def files_engine():
+    import subprocess, glob
+    if not args.clips: sys.exit('--clips <dir> is required for --engine files')
+    state = {'i': 0}
+    def synth(line):
+        hits = sorted(glob.glob(os.path.join(args.clips, f"line_{state['i']:03d}.*")))
+        if not hits: sys.exit(f"missing clip line_{state['i']:03d}.* for: {line}")
+        state['i'] += 1
+        raw = subprocess.run(['ffmpeg', '-loglevel', 'error', '-i', hits[0], '-f', 's16le', '-ac', '1', '-ar', str(SR), '-'], capture_output=True, check=True).stdout
+        return np.frombuffer(raw, dtype='<i2').astype(np.float32) / 32768.0, SR
+    return synth, args.voice or 'clips:' + os.path.basename(os.path.normpath(args.clips))
+
+synth, VOICE = {'kokoro': kokoro_engine, 'elevenlabs': elevenlabs_engine, 'files': files_engine}[args.engine]()
 
 # ---------------------------------------------------------------- assemble
 VDIR = os.path.join(ROOT, 'videos', args.video); os.makedirs(os.path.join(VDIR, 'audio'), exist_ok=True)
