@@ -69,16 +69,32 @@ in `src/` and `scripts/`. Read `references/library.md` before writing any scene 
    print world positions when a hand, prop, or subject is not where the shot needs it. Fix
    framing with numbers, not guesses: the vertical frame has only about 23 degrees of
    horizontal field of view.
-7. **Full render.** `node scripts/render.js --video <slug>` (about 0.5 s per frame on CPU;
-   run it in the background for anything over 2 minutes). Then
-   `node scripts/contact-sheet.js --video <slug> --cuts=<cue times>` and inspect
-   `out/<slug>/contact-sheet.png` and `out/<slug>/qa/*.png`. Check for black frames, empty
-   shots, subjects out of frame, clipping, duplicated characters, captions over the action,
-   and visuals that drift from the narration. Fix and re-render until clean. Never ship a
-   render you have not looked at.
-8. **Verify and deliver.** ffprobe must show h264, 1080x1920, 30/1, yuv420p, an aac audio
-   stream, and the expected frame count. Copy the MP4 and contact sheet to
-   `renders/<slug>/`, send the MP4 to the user, commit, and report: duration, resolution,
+7. **Full render, then a full review before anything is sent.** `node scripts/render.js --video <slug>`
+   (about 0.4 s per frame on CPU; run it in the background for anything over 2 minutes). Thomas
+   requires a review of every finished video for broken or confusing parts before delivery; a
+   contact sheet alone is not a review. Do all of this every time:
+   - Extract a timestamped frame every 3 s (Short) or 6 s (long form) and tile them 4x4:
+     `ffmpeg -i out/<slug>/final-animation.mp4 -vf "fps=1/6,scale=480:-1,drawtext=fontfile=/usr/share/fonts/opentype/inter/Inter-Bold.otf:text='%{pts\:hms}':x=8:y=8:fontsize=22:fontcolor=yellow:box=1:boxcolor=black@0.6,tile=4x4:padding=4" out/<slug>/review/r%02d.png`
+     and look at every sheet, not a sample.
+   - For each frame, compare against the narration line playing at that time (shot plan). Ask:
+     could a viewer who has not read the script say what this frame shows? If not, it is broken.
+   - Check every item in `references/pitfalls.md` under "Review checklist", plus black or empty
+     frames, subjects out of frame, clipping, duplicated characters, and text over the action.
+   - Fix what you find, re-render only the affected frame ranges with `--start/--end --out`,
+     splice them in with ffmpeg (three-input concat, audio from the master), and review the
+     spliced ranges again. Never ship a render you have not reviewed end to end.
+   - In the delivery message, list what the review found and what was fixed. If something is
+     knowingly left imperfect, say which timestamps.
+8. **Subtitles.** Narration subtitles are on by default. Run
+   `python3 scripts/subtitles.py --video <slug> --burn`: it writes `videos/<slug>/subtitles.srt`
+   (spelled-out numbers turned back into digits) and burns them into
+   `out/<slug>/final-subtitled.mp4` without a 3D re-render. Keep on-screen labels above the
+   subtitle line (long form: label band y 880 to 1000, subtitles at the bottom edge). Review the
+   subtitled file too.
+9. **Verify and deliver.** ffprobe must show h264, the expected resolution (1080x1920 Short,
+   1920x1080 long form), 30/1, yuv420p, an aac audio stream, and the expected frame count. Send
+   the subtitled MP4 and the SRT. Copy them and the contact sheet to `renders/<slug>/` (files over
+   100 MB need a crf 24 copy for git), send the MP4 to the user, commit, and report: duration, resolution,
    fps, audio included, a scene summary, and the exact render command.
 
 ## Non-negotiables

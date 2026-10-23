@@ -16,3 +16,37 @@ Each of these cost a render. Check them before the first spot frame.
 12. **Captions over feet.** Lower the lookAt so the figure sits higher when a gauge or caption is in the bottom band.
 13. **Playwright and Chromium versions differ.** Always launch with `executablePath: '/opt/pw-browsers/chromium'` (already in the scripts).
 14. **Long renders.** 1000 frames is about 9 minutes; run `render.js` in the background and poll the log for `^wrote`.
+
+15. **Render time cost.** A 15 minute 16:9 video is about 27,000 frames and 3 hours on CPU. Fix
+    problems from spot frames before the full render; after it, re-render only broken ranges.
+
+## Review checklist (from the Chapter 16 review, where each of these reached the delivered video)
+
+Every item below shipped once and confused the viewer. Check each before delivery.
+
+- **Empty build-up shots.** A prop that scales up from 0 shows only shadows until it grows (the
+  pyramid sat as two floating shadows for 10 s). Start visible, or cut in when it appears.
+- **Camera aimed at nothing.** Push-ins and tilts that end on a flat colour wall, the side of a
+  block, or the back of a head (pyramid descent, throne crack, whip post, mask). The end frame of
+  every move must still contain an identifiable subject. Probe it.
+- **Abstract geometry with no labels.** Unlabelled slabs read as nothing (emancipation map before
+  it fills, state blocks on the cotton map, globe continents). Give every map shape an outline
+  and a readable name, and keep continents on the sphere surface, not as cards sticking out.
+- **Labels that render as black boxes.** Dark text on a dark sprite background at small size is
+  unreadable (state names, "slave codes" under the law book). Minimum label height on screen
+  about 24 px; light text on dark, or dark text on parchment, never dark on dark.
+- **Props that read as something else.** Lincoln's list held edge-on read as a pistol; a burning
+  page read as a glowing face; a chain of torus rings read as text ("OIOIOI"); a sign held
+  edge-on read as a bar. Hold flat props facing the camera and check the silhouette.
+- **Scale too small to read.** Key action in 2 to 5 % of the frame (the ship carrying the bale,
+  the coin pile, figures on the two platforms). The subject of the line should fill at least a
+  fifth of the frame height.
+- **Characters leaving the shot.** The auctioned mother and child walked behind the crowd and
+  vanished; Lincoln's head left the top of the frame. Track the subject or keep it inside.
+- **Long static holds.** A beat with nothing changing for more than 8 s (pyramid "push" of 0.08
+  units for 25 s, John Little night held 30 s). Add a visible change or a cut.
+- **Night that is not night.** A "night" scene still under a beige sky. Change the background
+  and the sky colour, not only the lights.
+- **Overlapping labels.** Several world labels at one spot (NO ENTRY / NO VOTE / NO SCHOOL,
+  the abolitionist trio's banners over heads). Space them or show one at a time.
+- **No narration subtitles.** Always burn them in (`scripts/subtitles.py --burn`).
