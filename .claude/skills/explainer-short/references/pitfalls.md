@@ -49,6 +49,14 @@ Every item below shipped once and confused the viewer. Check each before deliver
   and the sky colour, not only the lights.
 - **Overlapping labels.** Several world labels at one spot (NO ENTRY / NO VOTE / NO SCHOOL,
   the abolitionist trio's banners over heads). Space them or show one at a time.
+- **Data buried in the surface it sits on.** The 1820 and 1840 pie charts were invisible because
+  the ledger pages were thicker than they looked: `box(w, h, d, color, r)` bevels add about 2r to
+  every dimension, so a 0.12 page is really 0.18 thick. Anything laid flat on a box must sit at
+  `y + h/2 + r + 0.02` or higher, and never tilt the surface under it. In review, check every
+  chart, map, and number against the narration: every value spoken must be visible, not just
+  its label. A label with nothing under it is a bug.
+- **Dark text on dark props.** World labels default to light text on a dark tag; never use dark
+  text unless the label sits on parchment with nothing behind it.
 - **No narration subtitles.** Always burn them in (`scripts/subtitles.py --burn`).
 16. **Wait loops that wait on themselves.** `while pgrep -f "subtitles.py"` matches its own shell
     command line, so it never exits, and `pkill -f` on the same pattern kills the calling shell.

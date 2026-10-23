@@ -74,7 +74,7 @@ export function buildLedger(T) {
   const g = new THREE.Group(); g.name = 'scene_ledger';
   lights(g, [2, 9, 5], { sun: 1.9, fill: 0.9, shadowSize: 8 });
   g.add(ground(30, 30, 0x3a2a1c));
-  const pages = [-1, 1].map((s) => { const p = box(3.2, 0.12, 4.4, PAL.parch, 0.03); p.position.set(s * 1.62, 0.1, 0); p.rotation.z = -s * 0.03; g.add(p); return p; });
+  const pages = [-1, 1].map((s) => { const p = box(3.2, 0.12, 4.4, PAL.parch, 0.03); p.position.set(s * 1.62, 0.04, 0); g.add(p); return p; });
   const spine = box(0.2, 0.2, 4.5, 0x4a2418, 0.03); spine.position.set(0, 0.08, 0); g.add(spine);
   for (let i = 0; i < 12; i++) { const ln = box(2.6, 0.005, 0.015, 0xc9b894, 0.001); ln.position.set(-1.62, 0.165, -1.9 + i * 0.35); g.add(ln); const r2 = ln.clone(); r2.position.x = 1.62; g.add(r2); }
   const uses = {};
@@ -82,10 +82,10 @@ export function buildLedger(T) {
   // S1.4 bars: cotton tons and enslaved people
   const U1 = use('numbers'); const bar = (x, z, color, w = 0.5) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, 1, 0.5), mat(color)); b.castShadow = true; b.position.set(x, 0.17, z); U1.add(b); return b; };
   const bC1 = bar(-2.4, -0.6, PAL.cotton), bC2 = bar(-1.0, -0.6, PAL.cotton, 0.9), bP1 = bar(0.9, -0.6, PAL.red), bP2 = bar(2.3, -0.6, PAL.red, 0.9);
-  const lab = (txt, x, z, parent, size = 0.26) => { const s = sign(txt, { size, bg: null, color: '#2a1a10' }); s.position.set(x, 0.25, z); parent.add(s); return s; };
+  const lab = (txt, x, z, parent, size = 0.26) => { const s = sign(txt, { size }); s.position.set(x, 0.25, z); parent.add(s); return s; };
   lab('1790', -2.4, 0.4, U1); lab('1860', -1.0, 0.4, U1); lab('1790', 0.9, 0.4, U1); lab('1860', 2.3, 0.4, U1);
   const lC1 = lab('1,000 tons', -2.4, -1.5, U1), lC2 = lab('1,000,000 tons', -1.0, -1.5, U1), lP1 = lab('500,000', 0.9, -1.5, U1), lP2 = lab('4,000,000', 2.3, -1.5, U1);
-  lab('cotton', -1.7, 1.0, U1, 0.3); lab('enslaved people', 1.6, 1.0, U1, 0.3);
+  lab('cotton', -1.7, 0.75, U1, 0.3); lab('enslaved people', 1.6, 0.75, U1, 0.3);
   // S2.2 pies
   const U2 = use('pies'); const pies = [[1800, 0.071], [1820, 0.32], [1840, 0.516], [1860, 0.575]].map(([y, f], i) => {
     const x = -2.4 + i * 1.6; const grey = new THREE.Mesh(new THREE.CircleGeometry(0.6, 40), mat(0xb9ad94)); grey.rotation.x = -Math.PI / 2; grey.position.set(x, 0.18, -0.2); U2.add(grey);
@@ -103,7 +103,7 @@ export function buildLedger(T) {
   // S10.7 law book with locks
   const U5 = use('law'); const law = book(2.2, 0.5, 3.0, 0x2a1a12); law.position.set(0, 0.42, 0); U5.add(law);
   const locks = []; for (let i = 0; i < 5; i++) { const l = new THREE.Group(); const body = box(0.26, 0.24, 0.12, PAL.gold, 0.03); l.add(body); const sh = new THREE.Mesh(new THREE.TorusGeometry(0.09, 0.025, 6, 10, Math.PI), mat(0x8a7a5a)); sh.position.y = 0.12; l.add(sh); l.position.set(1.15, 0.5, -1.2 + i * 0.6); l.visible = false; U5.add(l); locks.push(l); }
-  lab('slave codes', 0, -1.5, U5, 0.34);
+  const sc = lab('slave codes', -1.5, 0.3, U5, 0.34); sc.position.y = 0.6;
 
   function update(t, cam) {
     const k14 = T.K('The numbers tell'), k15 = T.K('The prediction had been');
